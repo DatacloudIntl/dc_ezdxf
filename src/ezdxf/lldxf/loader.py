@@ -77,7 +77,9 @@ def load_dxf_structure(tagger: Iterable[DXFTag], ignore_missing_eof: bool = Fals
     # a (0, SECTION) tag could start a new section even without a preceding (0, ENDSEC) tag
     for entity in group_tags(tagger):
         tag = entity[0]
-        if (tag == (0, 'SECTION')) or (tag == (0, 'SECTION ')):
+        if tag == (0, 'SECTION '):
+            entity[0] = DXFTag(0,'SECTION')
+            tag = entity[0]
             if inside_section():
                 # todo: just log - end actual section and start a new one
                 raise DXFStructureError("DXFStructureError: missing ENDSEC tag.")
